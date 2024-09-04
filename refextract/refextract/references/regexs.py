@@ -689,39 +689,45 @@ def _create_regex_pattern_add_optional_spaces_to_word_characters(word):
 
 def get_reference_section_title_patterns():
     """Return a list of compiled regex patterns used to search for the title of
-       a reference section in a full-text document.
+       a reference section in a full-text document, including support for Spanish.
        @return: (list) of compiled regex patterns.
     """
     patterns = []
     titles = [u'references',
-              u'r\u00C9f\u00E9rences',
-              u'r\u00C9f\u00C9rences',
-              u'r\xb4ef\xb4erences',
-              u'bibliography',
-              u'bibliographie',
-              u'literaturverzeichnis',
-              u'citations',
-              u'refs',
-              u'publications'
-              u'r\u00E9fs',
-              u'r\u00C9fs',
-              u'reference',
-              u'r\u00E9f\u00E9rence',
-              u'r\u00C9f\u00C9rence']
+              u'r\u00C9f\u00E9rences',  # francés
+              u'r\u00C9f\u00C9rences',  # francés
+              u'r\xb4ef\xb4erences',   # francés
+              u'bibliography',         # inglés
+              u'bibliographie',        # francés
+              u'literaturverzeichnis', # alemán
+              u'citations',            # inglés
+              u'refs',                 # abreviado
+              u'publications',         # inglés
+              u'r\u00E9fs',            # abreviado francés
+              u'r\u00C9fs',            # abreviado francés
+              u'reference',            # inglés
+              u'r\u00E9f\u00E9rence',   # francés
+              u'r\u00C9f\u00C9rence',   # francés
+              u'bibliografía',         # español
+              u'fuentes',              # español
+              u'referencias',          # español
+              u'obras citadas',        # español
+              u'citaciones']           # español
+
     sect_marker = r'^\s*([\[\-\{\(])?\s*' \
                   r'((\w|\d){1,5}([\.\-\,](\w|\d){1,5})?\s*' \
                   r'[\.\-\}\)\]]\s*)?' \
                   r'(?P<title>'
     sect_marker1 = r'^(\d){1,3}\s*(?P<title>'
     line_end = r'(\s*s\s*e\s*c\s*t\s*i\s*o\s*n\s*)?)\.?([\)\}\]])?' \
-        r'($|\s*[\[\{\(\<]\s*[1a-z]\s*[\}\)\>\]]|\:$)'
+               r'($|\s*[\[\{\(\<]\s*[1a-z]\s*[\}\)\>\]]|\:$)'
 
     for t in titles:
         t_ptn = re.compile(sect_marker +
                            _create_regex_pattern_add_optional_spaces_to_word_characters(t) +
                            line_end, re.I | re.UNICODE)
         patterns.append(t_ptn)
-        # allow e.g.  'N References' to be found where N is an integer
+        # allow e.g. 'N References' to be found where N is an integer
         t_ptn = re.compile(sect_marker1 +
                            _create_regex_pattern_add_optional_spaces_to_word_characters(t) +
                            line_end, re.I | re.UNICODE)
